@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import PlusSign from 'material-ui/svg-icons/content/add';
 import Ticket from './Ticket';
+import AddTicket from '../containers/AddTicket';
 
 class Tickets extends Component{
 	constructor(props, context){
@@ -43,6 +44,7 @@ class Tickets extends Component{
 	render(){
 		return(
 			<div>
+				<AddTicket />
 				<FlatButton 
 					label="Add Free Ticket" 
 					labelPosition="after" 
