@@ -11,6 +11,8 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Subheader from 'material-ui/Subheader';
 import DropDownMenu from 'material-ui/DropDownMenu';
+import SelectField from 'material-ui/SelectField';
+
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
@@ -25,14 +27,13 @@ class VerticalStepper extends Component{
 
 		this.handleNext = this.handleNext.bind(this);
 		this.handlePrev = this.handlePrev.bind(this);
-		this.handleEventTypeDropdownChange = this.handleEventTypeDropdownChange.bind(this);
 		this.handleStateDropdownChange = this.handleStateDropdownChange.bind(this);
 		this.handlePrivacyDropdownChange = this.handlePrivacyDropdownChange.bind(this);
 		this.handleAttendSettingDropdownChange = this.handleAttendSettingDropdownChange.bind(this);
 
 		this.state = {
 			stepIndex: 0,
-			dropdownValue: 1,
+			dropdownValue: 'career-fair',
 			stateValue: 'AL',
 			privacyValue: 1,
 			attendSettingValue: 1,
@@ -57,10 +58,6 @@ class VerticalStepper extends Component{
 		const stepIndex = this.state.stepIndex;
 		if(stepIndex > 0)
 			this.setState({stepIndex: stepIndex - 1});
-	}
-
-	showInvitations(){
-
 	}
 
 	renderStepActions(step) {
@@ -108,32 +105,35 @@ class VerticalStepper extends Component{
 			i++;
 		}
 		return (
-			<DropDownMenu style={{width: '25%', float: 'right', marginTop: '15px'}} maxHeight={300} value={this.state.stateValue} onChange={this.handleStateDropdownChange}>
+			<SelectField  
+				style={{width: '25%', float: 'right', marginTop: '15px'}} 
+				maxHeight={300} value={this.state.stateValue} 
+				onChange={this.handleStateDropdownChange}
+				floatingLabelText="State">
 				{states}
-			</DropDownMenu>
+			</SelectField>
 		);
 	}
 
 	handleEventTypeDropdownChange(event, index, value) {
-		this.setState({dropdownValue: value});
+		this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'type', value);
 	}
 
 	handleStateDropdownChange(event, index, value) {
-		this.setState({stateValue: value});
+		this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'state', value);
 	}
 
 	handlePrivacyDropdownChange(event, index, value) {
-		this.setState({privacyValue: value});
+		this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'public', value);
 	}
 
 	handleAttendSettingDropdownChange(event, index, value) {
-		this.setState({attendSettingValue: value});
+		this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'audience', value);
 	}
 
 	render() {
 		console.log(this.props)
 		const stepIndex = this.state.stepIndex;
-
 		return(
 			<div style={{width: "100%", maxWidth: 767, margin: 'auto'}}>
 				<Stepper activeStep={stepIndex} linear={false} orientation="vertical">
@@ -142,20 +142,38 @@ class VerticalStepper extends Component{
 							Name & Details
 						</StepButton>
 						<StepContent>
-							<TextField hintText="i.e. Alumni Night" floatingLabelText="Event Name" fullWidth={true} /><br />
-							<Subheader style={{width: '25%', float: 'left', 'padding': 0}}>Event Type:</Subheader>
-							<DropDownMenu style={{width: '75%'}} value={this.state.dropdownValue} onChange={this.handleEventTypeDropdownChange}>
-								<MenuItem value={1} primaryText="Career Fair" />
-								<MenuItem value={2} primaryText="OCR" />
-								<MenuItem value={3} primaryText="Job Shadow" />
-								<MenuItem value={4} primaryText="Workshop" />
-								<MenuItem value={5} primaryText="Other" />
-							</DropDownMenu><br />
-							<DatePicker hintText="Start Date" mode="landscape" />
-							<TimePicker hintText="Start Time" />
-							<DatePicker hintText="End Date" mode="landscape" />
-							<TimePicker hintText="End Time" />
-							<TextField floatingLabelText="Event Description" /><br />
+							<TextField 
+								hintText="i.e. Alumni Night" 
+								floatingLabelText="Event Name" 
+								fullWidth={true} 
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'name', e.target.value)}/><br />
+							<SelectField 
+								style={{width: '75%'}} 
+								value={this.state.dropdownValue} 
+								floatingLabelText="Event Type"
+								onChange={this.handleEventTypeDropdownChange.bind(this)}>
+								<MenuItem value="career-fair" primaryText="Career Fair" />
+								<MenuItem value="ocr" primaryText="OCR" />
+								<MenuItem value="job-shadow" primaryText="Job Shadow" />
+								<MenuItem value="workshop" primaryText="Workshop" />
+								<MenuItem value="other" primaryText="Other" />
+							</SelectField><br />
+							<DatePicker 
+								hintText="Start Date" 
+								mode="landscape" 
+								onChange={(x, e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'startDate', e)}/>
+							<TimePicker 
+								hintText="Start Time"
+								onChange={(x, e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'startTime', e)} />
+							<DatePicker 
+								hintText="End Date" 
+								mode="landscape"
+								onChange={(x, e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'endDate', e)} />
+							<TimePicker 
+								hintText="End Time"
+								onChange={(x, e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'endTime', e)} />
+							<TextField floatingLabelText="Event Description" 
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'description', e.target.value)}/><br />
 							{this.renderStepActions(0)}
 						</StepContent>
 					</Step>
@@ -164,13 +182,37 @@ class VerticalStepper extends Component{
 							Location
 						</StepButton>
 						<StepContent>
-							<TextField hintText="i.e. Cambridge Innovation Center" floatingLabelText="Location Name" fullWidth={true} /><br />
-							<TextField hintText="i.e. 123 Center St" floatingLabelText="Address" style={{width: '74%', float: 'left'}} />
-							<TextField hintText="i.e. 12" floatingLabelText="Room/Floor" style={{width: '25%', float: 'right'}} />
-							<TextField hintText="i.e. Boston" floatingLabelText="City" style={{width: '74%', float: 'left'}} />
+							<TextField 
+								hintText="i.e. Cambridge Innovation Center" 
+								floatingLabelText="Location Name" 
+								fullWidth={true}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'locationName', e.target.value)} /><br />
+							<TextField 
+								hintText="i.e. 123 Center St" 
+								floatingLabelText="Address" 
+								style={{width: '74%', float: 'left'}}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'address', e.target.value)} />
+							<TextField 
+								hintText="i.e. 12" 
+								floatingLabelText="Room/Floor" 
+								style={{width: '25%', float: 'right'}}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'room', e.target.value)} />
+							<TextField 
+								hintText="i.e. Boston" 
+								floatingLabelText="City" 
+								style={{width: '74%', float: 'left'}}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'city', e.target.value)} />
 							{this.renderStates()}
-							<TextField hintText="i.e. United States" floatingLabelText="Country" style={{width: '74%', float: 'left'}} />
-							<TextField hintText="i.e. 02113" floatingLabelText="Postal Code" style={{width: '25%', float: 'right'}} />
+							<TextField 
+								hintText="i.e. United States" 
+								floatingLabelText="Country" 
+								style={{width: '74%', float: 'left'}}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'country', e.target.value)} />
+							<TextField 
+								hintText="i.e. 02113" 
+								floatingLabelText="Postal Code" 
+								style={{width: '25%', float: 'right'}}
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'postal', e.target.value)} />
 							{this.renderStepActions(1)}
 						</StepContent>
 					</Step>
@@ -179,17 +221,31 @@ class VerticalStepper extends Component{
 							Privacy & Tags
 						</StepButton>
 						<StepContent>
-							<TextField floatingLabelText="Primary Contanct Name" style={{width: '49%', float: 'left'}} />
-							<TextField floatingLabelText="Primary Contact E-Mail" style={{width: '49%', float: 'right'}} />
-							<DropDownMenu style={{width: '49%', float: 'left'}} value={this.state.privacyValue} onChange={this.handlePrivacyDropdownChange}>
-								<MenuItem value={1} primaryText="Public" />
-								<MenuItem value={2} primaryText="Invite Only" />
-							</DropDownMenu>
-							<DropDownMenu style={{width: '49%', float: 'right'}} value={this.state.attendSettingValue} onChange={this.handleAttendSettingDropdownChange}>
-								<MenuItem value={1} primaryText="Everyone" />
-								<MenuItem value={2} primaryText="Alumni" />
-								<MenuItem value={3} primaryText="Students" />
-							</DropDownMenu>
+							<TextField 
+								floatingLabelText="Primary Contanct Name" 
+								style={{width: '49%', float: 'left'}} 
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'primaryContactName', e.target.value)}/>
+							<TextField 
+								floatingLabelText="Primary Contact E-Mail" 
+								style={{width: '49%', float: 'right'}} 
+								onBlur={(e) => this.props.onEditEvent(this.props.info[this.props.info.length - 1].id, 'primaryContactEmail', e.target.value)}/>
+							<SelectField 
+								style={{width: '49%', float: 'left'}} 
+								value={this.state.privacyValue} 
+								onChange={this.handlePrivacyDropdownChange} 
+								floatingLabelText="Privacy">
+								<MenuItem value={true} primaryText="Public" />
+								<MenuItem value={false} primaryText="Invite Only" />
+							</SelectField>
+							<SelectField 
+								style={{width: '49%', float: 'right'}} 
+								value={this.state.attendSettingValue} 
+								onChange={this.handleAttendSettingDropdownChange}
+								floatingLabelText="Audience">
+								<MenuItem value="everyone" primaryText="Everyone" />
+								<MenuItem value="alumni" primaryText="Alumni" />
+								<MenuItem value="students" primaryText="Students" />
+							</SelectField>
 							<CTAutoComplete />
 							{this.renderStepActions(2)}
 						</StepContent>

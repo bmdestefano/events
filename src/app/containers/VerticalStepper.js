@@ -1,7 +1,7 @@
 'use strict'
 
 import { connect } from 'react-redux';
-import { addEvent } from '../actions/index';
+import { addEvent, editEvent } from '../actions/index';
 import compVerticalStepper from '../components/VerticalStepper';
 
 const mapStateToProps = (state) => {
@@ -15,6 +15,10 @@ const mapDispatchToProps = (dispatch) => {
     onAddEvent: (id) => {
       console.log(`CONTAINER: ADDING EVENT WITH ID ${id}`)
       dispatch(addEvent(id))
+    },
+    onEditEvent: (id, field, value) => {
+      console.log(`CONTAINER: EDITING EVENT ${id} WITH ${field} AND ${value}`);
+      dispatch(editEvent(id, field, value));
     }
   }
 }

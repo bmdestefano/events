@@ -58,7 +58,16 @@ const info = (state = [], action) => {
         }
       ]
     case EDIT_EVENT:
-
+        console.log(`REDUCER: EDITING EVENT ${action.payload.id} WITH ${action.payload.field} AND ${action.payload.value}`);
+        return(
+            state.map((event, index) => {
+                if(event.id == action.payload.id)
+                    return Object.assign({}, event, {
+                        [action.payload.field]: action.payload.value
+                    })
+            })
+        )
+        
     default:
       return state;
   }
