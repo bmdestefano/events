@@ -38,7 +38,15 @@ class VerticalStepper extends Component{
 			attendSettingValue: 1,
 		};
 	}
-
+	componentWillMount(){
+		//componentWillReceiveProps
+		//componentDidMount
+		//componentDidReceiveProps
+		//componentWillUnmount
+		//componentDidUnmount
+		let newId = this.props.info.length;
+		this.props.onAddEvent(newId);
+	}
 	handleNext(){
 		const stepIndex = this.state.stepIndex;
 		if(stepIndex < 2)
@@ -52,7 +60,7 @@ class VerticalStepper extends Component{
 	}
 
 	showInvitations(){
-		
+
 	}
 
 	renderStepActions(step) {
@@ -123,8 +131,9 @@ class VerticalStepper extends Component{
 	}
 
 	render() {
+		console.log(this.props)
 		const stepIndex = this.state.stepIndex;
-		
+
 		return(
 			<div style={{width: "100%", maxWidth: 767, margin: 'auto'}}>
 				<Stepper activeStep={stepIndex} linear={false} orientation="vertical">
