@@ -1,7 +1,6 @@
-export const addTicket = (id, type) => {
+export const addTicket = (ticketType) => {
 	return {
 		type: 'ADD_TICKET',
-		id,
 		ticketType
 	}
 }

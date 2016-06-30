@@ -1,30 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addTodo } from '../actions'
+import { addTicket } from '../actions'
+import FlatButton from 'material-ui/FlatButton'
+import PlusSign from 'material-ui/svg-icons/content/add'
 
-let AddTodo = ({ dispatch }) => {
-  let input
-
-  return (
-    <div>
-      <form onSubmit={e => {
-        e.preventDefault()
-        if (!input.value.trim()) {
-          return
-        }
-        dispatch(addTodo(input.value))
-        input.value = ''
-      }}>
-        <input ref={node => {
-          input = node
-        }} />
-        <button type="submit">
-          Add Todo
-        </button>
-      </form>
-    </div>
-  )
+let AddTicket = ({ dispatch }) => {
+	return (
+		<FlatButton 
+			label="Add Free Ticket" 
+			labelPosition="after" 
+			primary={true} 
+			icon={<PlusSign />} 
+			style={{float: 'left'}} 
+			onClick={e => {
+				dispatch(addTicket('free'))
+			}}/>
+	);
 }
-AddTodo = connect()(AddTodo)
+AddTicket = connect()(AddTicket)
 
-export default AddTodo
+export default AddTicket
