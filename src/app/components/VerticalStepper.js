@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import AppBar from 'material-ui/AppBar';
 import {
 	Step,
 	Stepper,
@@ -10,14 +13,23 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Subheader from 'material-ui/Subheader';
-import DropDownMenu from 'material-ui/DropDownMenu';
+import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import CTAutoComplete from './CTAutoComplete';
 import Tickets from './Tickets';
 import Reminders from './Reminders';
+import Invitations from './Invitations';
 import States from 'ustates';
+require('../styles/import.scss');
+
+const muiTheme = getMuiTheme({
+	palette: {
+		primary1Color: "#00A9E0",
+		accent1Color: "#EA7600",
+	},
+});
 
 class VerticalStepper extends Component{
 	constructor(props, context){
@@ -52,7 +64,15 @@ class VerticalStepper extends Component{
 	}
 
 	showInvitations(){
-		
+		render(
+			<MuiThemeProvider muiTheme={muiTheme}>
+				<div>
+					<AppBar title="Colby College" />
+					<h1>Create A New Event</h1>
+					<Invitations />
+				</div>
+			</MuiThemeProvider>
+		, document.getElementById('app'));
 	}
 
 	renderStepActions(step) {
@@ -100,9 +120,9 @@ class VerticalStepper extends Component{
 			i++;
 		}
 		return (
-			<DropDownMenu style={{width: '25%', float: 'right', marginTop: '15px'}} maxHeight={300} value={this.state.stateValue} onChange={this.handleStateDropdownChange}>
+			<SelectField style={{width: '25%', float: 'right', marginTop: '15px'}} maxHeight={300} value={this.state.stateValue} onChange={this.handleStateDropdownChange}>
 				{states}
-			</DropDownMenu>
+			</SelectField>
 		);
 	}
 
@@ -134,14 +154,17 @@ class VerticalStepper extends Component{
 						</StepButton>
 						<StepContent>
 							<TextField hintText="i.e. Alumni Night" floatingLabelText="Event Name" fullWidth={true} /><br />
-							<Subheader style={{width: '25%', float: 'left', 'padding': 0}}>Event Type:</Subheader>
-							<DropDownMenu style={{width: '75%'}} value={this.state.dropdownValue} onChange={this.handleEventTypeDropdownChange}>
+							<SelectField 
+								style={{width: '75%'}} 
+								value={this.state.dropdownValue} 
+								onChange={this.handleEventTypeDropdownChange}
+								floatingLabelText="Event Type">
 								<MenuItem value={1} primaryText="Career Fair" />
 								<MenuItem value={2} primaryText="OCR" />
 								<MenuItem value={3} primaryText="Job Shadow" />
 								<MenuItem value={4} primaryText="Workshop" />
 								<MenuItem value={5} primaryText="Other" />
-							</DropDownMenu><br />
+							</SelectField><br />
 							<DatePicker hintText="Start Date" mode="landscape" />
 							<TimePicker hintText="Start Time" />
 							<DatePicker hintText="End Date" mode="landscape" />
@@ -172,15 +195,15 @@ class VerticalStepper extends Component{
 						<StepContent>
 							<TextField floatingLabelText="Primary Contanct Name" style={{width: '49%', float: 'left'}} />
 							<TextField floatingLabelText="Primary Contact E-Mail" style={{width: '49%', float: 'right'}} />
-							<DropDownMenu style={{width: '49%', float: 'left'}} value={this.state.privacyValue} onChange={this.handlePrivacyDropdownChange}>
+							<SelectField style={{width: '49%', float: 'left'}} value={this.state.privacyValue} onChange={this.handlePrivacyDropdownChange}>
 								<MenuItem value={1} primaryText="Public" />
 								<MenuItem value={2} primaryText="Invite Only" />
-							</DropDownMenu>
-							<DropDownMenu style={{width: '49%', float: 'right'}} value={this.state.attendSettingValue} onChange={this.handleAttendSettingDropdownChange}>
+							</SelectField>
+							<SelectField style={{width: '49%', float: 'right'}} value={this.state.attendSettingValue} onChange={this.handleAttendSettingDropdownChange}>
 								<MenuItem value={1} primaryText="Everyone" />
 								<MenuItem value={2} primaryText="Alumni" />
 								<MenuItem value={3} primaryText="Students" />
-							</DropDownMenu>
+							</SelectField>
 							<CTAutoComplete />
 							{this.renderStepActions(2)}
 						</StepContent>
