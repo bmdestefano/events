@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
-const buildPath = path.resolve(__dirname, 'build');
+const autoprefixer = require('autoprefixer')
+const distPath = path.resolve(__dirname, '/dist');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const TransferWebpackPlugin = require('transfer-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -12,20 +13,11 @@ const config = {
     'webpack/hot/only-dev-server',
     path.join(__dirname, '/src/app/app.js'),
   ],
-  // Server Configuration options
-  devServer: {
-    contentBase: 'src/www', // Relative directory for base of server
-    devtool: 'eval',
-    hot: true, // Live-reload
-    inline: true,
-    port: 3000, // Port Number
-    host: 'localhost', // Change to '0.0.0.0' for external facing server
-  },
-  devtool: 'eval',
   output: {
-    path: buildPath, // Path of output file
     filename: 'app.js',
+    path: __dirname + "/dist", // Path of output file
   },
+
   plugins: [
     // Enables Hot Modules Replacement
     new webpack.HotModuleReplacementPlugin(),
@@ -35,9 +27,15 @@ const config = {
     new TransferWebpackPlugin([
       {from: 'www'},
     ], path.resolve(__dirname, 'src')),
-    new ExtractTextPlugin('www/main.css', {
-        allChunks: true
-    }),
+
+    new ExtractTextPlugin("style.css", {
+           allChunks: true
+       })
+  ],
+  postcss: [
+    autoprefixer({
+      browsers: ['last 2 versions']
+    })
   ],
   module: {
     loaders: [
@@ -49,10 +47,23 @@ const config = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!sass'),
+        loader: ExtractTextPlugin.extract(
+        'style', // backup loader when not disting .css file
+        'css!sass' // loaders to preprocess CSS
+        )
       }
     ],
   },
+  devServer: {
+    contentBase: 'src/www', // Relative directory for base of server
+    devtool: 'eval',
+    hot: true, // Live-reload
+    inline: true,
+    port: 3000, // Port Number
+    host: 'localhost', // Change to '0.0.0.0' for external facing server
+  },
+  devtool: 'source-map',
+  devtool: 'eval',
 };
 
 module.exports = config;
