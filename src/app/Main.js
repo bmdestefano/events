@@ -8,7 +8,11 @@ const muiTheme = getMuiTheme({
 	palette: {
 		primary1Color: "#00A9E0",
 		accent1Color: "#EA7600",
+		pickerHeaderColor: "#00A9E0",
 	},
+	datePicker: {
+		selectColor: "#00A9E0",
+	}
 });
 
 class Main extends Component {
@@ -17,7 +21,6 @@ class Main extends Component {
 			<MuiThemeProvider muiTheme={muiTheme}>
 				<div>
 					<AppBar title="Colby College" />
-					<h1>Create A New Event</h1>
 					<VerticalStepper />
 				</div>
 			</MuiThemeProvider>

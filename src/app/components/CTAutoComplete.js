@@ -17,13 +17,15 @@ class CTAutoComplete extends Component{
 	}
 
 	addTag(request, index){
+		this.setState({searchText: ''});
+
 		const tags = this.state.activeTags;
 
 		if(tags.indexOf(request) != -1)
 			return true;
 		tags.push({key: index, label : request});
 
-		this.setState({activeTags: tags, searchText: ''});
+		this.setState({activeTags: tags});
 	}
 
 	handleRequestDelete(key){
@@ -45,7 +47,10 @@ class CTAutoComplete extends Component{
 				<Chip
 					key={tag.key}
 					onRequestDelete={() => this.handleRequestDelete(tag.key)}
-					style={{textTransform: 'uppercase'}}
+					backgroundColor={"#EA7600"}
+					labelColor={"#FFF"}
+					style={{textTransform: 'uppercase', float: 'left', marginRight: "10px", marginTop: "10px"}}
+					className="tag-chip"
 				>{tag.label}</Chip>
 			);
 		})
@@ -59,14 +64,20 @@ class CTAutoComplete extends Component{
 		return(
 			<div>
 				<AutoComplete fullWidth={true} 
-					floatingLabelText="Tags" 
+					floatingLabelText="Enter Tags" 
 					filter={AutoComplete.fuzzyFilter} 
 					dataSource={tags} 
 					maxSearchResults={5}
 					searchText={this.state.searchText}
 					onNewRequest={this.addTag.bind(this)}
-					onUpdateInput={this.handleUpdateInput.bind(this)} />
-				{this.renderTagList()}
+					onUpdateInput={this.handleUpdateInput.bind(this)}
+					hintText="i.e. Accounting" />
+				<div style={{width: "100%", height: "33px"}}>
+					{this.state.activeTags.length > 0 && (
+						<p style={{color: "#555", display: "inline-block", "marginRight": "10px", "float": "left"}}>Selected Tags:</p>
+					)}
+					{this.renderTagList()}
+				</div>
 			</div>
 		);
 	}

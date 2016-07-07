@@ -18,7 +18,7 @@ class Tickets extends Component{
 			return true;
 		return tickets.map((ticket, index) => {
 			return(
-				<Ticket type={ticket.type} key={ticket.key} onClick={() => this.deleteTicket(ticket.key)}/>
+				<Ticket type={ticket.type} key={ticket.key} index={index} onClick={() => this.deleteTicket(ticket.key)}/>
 			);
 		})
 
@@ -43,20 +43,24 @@ class Tickets extends Component{
 	render(){
 		return(
 			<div>
-				<FlatButton 
-					label="Add Free Ticket" 
-					labelPosition="after" 
-					primary={true} 
-					icon={<PlusSign />} 
-					style={{float: 'left'}} 
-					onClick={() => this.addTicket('free')}/>
-				<FlatButton 
-					label="Add Paid Ticket" 
-					labelPosition="after" 
-					primary={true} 
-					icon={<PlusSign />} 
-					style={{float: 'left'}} 
-					onClick={() => this.addTicket('paid')}/>	
+				<div style={{width: "100%", marginTop: "1rem", float: "left"}}>
+					<FlatButton 
+						label="Add Free Ticket" 
+						labelPosition="after" 
+						primary={true} 
+						icon={<PlusSign />} 
+						style={{float: 'left'}} 
+						className="rounded-button"
+						onClick={() => this.addTicket('free')}/>
+					<FlatButton 
+						label="Add Paid Ticket" 
+						labelPosition="after" 
+						primary={true} 
+						icon={<PlusSign />} 
+						style={{float: 'left'}} 
+						className="rounded-button"
+						onClick={() => this.addTicket('paid')}/>	
+				</div>
 				{this.renderTicketList()}
 			</div>
 		);
