@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
-import VerticalStepper from './components/VerticalStepper'
+import VerticalStepper from './components/VerticalStepper';
 
 const muiTheme = getMuiTheme({
 	palette: {
