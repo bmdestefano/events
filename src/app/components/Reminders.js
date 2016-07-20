@@ -4,7 +4,20 @@ import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import TextField from 'material-ui/TextField';
-import RemoveIcon from 'material-ui/svg-icons/content/remove';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import RemoveIcon from 'material-ui/svg-icons/action/delete';
+import {red500} from 'material-ui/styles/colors';
+import areIntlLocalesSupported from 'intl-locales-supported';
+
+let DateTimeFormat;
+if (areIntlLocalesSupported(['fr']))
+	DateTimeFormat = global.Intl.DateTimeFormat;
+else {
+	const IntlPolyfill = require('intl');
+	DateTimeFormat = IntlPolyfill.DateTimeFormat;
+	require('intl/locale-data/jsonp/fr');
+}
 
 class Reminders extends Component{
 	constructor(props, context){
@@ -12,6 +25,7 @@ class Reminders extends Component{
 
 		this.state = {
 			reminders : [],
+			dropdownValue: 'email',
 		}
 	}
 
@@ -21,15 +35,51 @@ class Reminders extends Component{
 			return true;
 		return reminders.map((reminder, index) => {
 			return(
-				<div key={reminder.key}>
-					<DatePicker hintText="Day" mode="landscape" />
-					<TimePicker hintText="Time" />
-					<TextField floatingLabelText="Reminder Text" />
-					<RemoveIcon onClick={() => this.deleteReminder(reminder.key)}/><br />
+				<div className="reminder" key={reminder.key}>
+					<p className="step-header" style={{marginBottom: "-.25rem"}}>Reminder {index + 1}</p>
+					<DatePicker 
+						hintText="Day" 
+						mode="landscape" 
+						autoOk={true}
+						formatDate={new DateTimeFormat('en-US', {
+							day: 'numeric',
+							month: 'long',
+							year: 'numeric',
+							}).format}
+						inputStyle={{color: "#555"}}
+						className="input-field" />
+					<div className="input-field">
+						<TimePicker hintText="Time" inputStyle={{color: "#555"}} />
+					</div>	
+					<SelectField 
+						className="input-field" 
+						value={this.state.dropdownValue} 
+						onChange={this.handleReminderTypeDropdownChange.bind(this)}
+						floatingLabelText="Reminder Type"
+						labelStyle={{color: "#555"}}>
+						<MenuItem value='email' primaryText="Email" />
+						<MenuItem value='push' primaryText="Push Notification" />
+						<MenuItem value='both' primaryText="Both" />
+					</SelectField>
+					<div className="input-field">
+						<FlatButton 
+							label="" 
+							labelPosition="after" 
+							primary={true} 
+							icon={<RemoveIcon color={red500} />}
+							hoverColor="transparent" 
+							onClick={() => this.deleteReminder(reminder.key)}/>
+					</div>
+					<TextField floatingLabelText="Reminder Text" fullWidth={true}/>
+					<hr className="break" />
 				</div>
 			);
 		})
 
+	}
+
+	handleReminderTypeDropdownChange(event, index, value) {
+		this.setState({dropdownValue: value});
 	}
 
 	addReminder(){
@@ -57,6 +107,7 @@ class Reminders extends Component{
 					primary={true} 
 					icon={<PlusSign />} 
 					style={{float: 'left'}} 
+					className="rounded-button"
 					onClick={() => this.addReminder(this)}/>
 				{this.renderReminderList()}
 			</div>
